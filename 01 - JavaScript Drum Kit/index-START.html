@@ -7,7 +7,8 @@
 </head>
 <body>
 
-
+<!-- data- attributes allow us to store extra data on standard HTML -->
+<!-- in JS can be accessed with .dataset after attribute name -->
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -59,6 +60,29 @@
 
 <script>
 
+  function playSound (e) {
+    /* use attribute selector to access each audio tag*/
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    
+    if(!audio) return;
+    audio.currentTime = 0; // rewind to the start of audio so if hit again it plays imidiately
+    audio.play();
+    key.classList.add('playing');
+   
+  }
+
+  function removeTransition (e, key) {
+    if (e.propertyName !== 'transform') return;
+    //this is equal to key bcos that what the function was called on
+    this.classList.remove('playing');
+  }
+  
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => {
+    key.addEventListener('transitionend', removeTransition)
+  });
+  window.addEventListener('keydown', playSound );
 </script>
 
 
